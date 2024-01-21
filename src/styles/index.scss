@@ -1,0 +1,12 @@
+// 将文件命名为 _colors.scss，便不会编译 _colours.css 文件
+
+// config
+@import "variables";
+
+//layout
+@import "reboot";
+
+//mixin
+@import "mixin";
+
+@import "../components/Button/style"
