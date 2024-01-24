@@ -78,10 +78,10 @@ describe("test Menu and MenuItem component in default(horizontal) mode", () => {
     fireEvent.click(thirdItem);
     expect(thirdItem).toHaveClass("is-active");
     expect(activeEl).not.toHaveClass("is-active");
-    expect(testProps.onSelect).toHaveBeenCalledWith(2);
+    expect(testProps.onSelect).toHaveBeenCalledWith('2');
     fireEvent.click(disabledEl);
     expect(disabledEl).not.toHaveClass("is-active");
-    expect(testProps.onSelect).not.toHaveBeenCalledWith(1);
+    expect(testProps.onSelect).not.toHaveBeenCalledWith('1');
   });
   it("should render vertical mode when mode is set to vertical", () => {
     render(generateMenu(testVerProps));

@@ -1,3 +1,11 @@
+/*
+ * @Author: zhaosigui
+ * @Date: 2024-01-20 13:16:55
+ * @LastEditors: zhaosigui
+ * @LastEditTime: 2024-01-24 01:03:47
+ * @FilePath: \antd\zntd\src\components\Button\button.test.tsx
+ * @Description: 
+ */
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import Button, { ButtonProps, ButtonSize, ButtonType } from "./button";
