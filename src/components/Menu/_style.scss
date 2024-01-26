@@ -6,11 +6,12 @@
   list-style: none;
   border-bottom: $menu-border-width solid $menu-border-color;
   box-shadow: $menu-box-shadow;
-  >.menu-item {
+  > .menu-item {
     padding: $menu-item-padding-y $menu-item-padding-x;
     cursor: pointer;
     transition: $menu-transition;
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       text-decoration: none;
     }
     &.is-disabled {
@@ -18,9 +19,11 @@
       pointer-events: none;
       cursor: default;
     }
-    &.is-active, &:hover {
+    &.is-active,
+    &:hover {
       color: $menu-item-active-color;
-      border-bottom: $menu-item-active-border-width solid $menu-item-active-color;
+      border-bottom: $menu-item-active-border-width solid
+        $menu-item-active-color;
     }
   }
   .submenu-item {
@@ -30,7 +33,7 @@
       align-items: center;
     }
     .arrow-icon {
-      transition: transform .25s ease-in-out;
+      transition: transform 0.25s ease-in-out;
       margin-left: 3px;
     }
     &:hover {
@@ -50,27 +53,34 @@
     }
   }
   .zntd-submenu {
-    display: none;
-    list-style:none;
+    // display:none---display: block; none 转换成block，其他的动画效果无效
+    // 预期效果display: none; ---> display: block;  opacity: 0; ---> display: block;  opacity: 1;
+    // display: block;  opacity: 1; --->  display: block;  opacity: 0; --->display: none;
+    // 利用 react-transition-group 包实现
+    // display: none;
+    // opacity: 0;
+    list-style: none;
     padding-left: 0;
     white-space: nowrap;
     transition: $menu-transition;
+    // transition: opacity 0.5s ease-in-out;
     .menu-item {
       padding: $menu-item-padding-y $menu-item-padding-x;
       cursor: pointer;
       transition: $menu-transition;
       color: $body-color;
-      &.is-active, &:hover {
+      &.is-active,
+      &:hover {
         color: $menu-item-active-color !important;
       }
     }
   }
   .zntd-submenu.menu-opened {
-    display: block;
+    // display: block;
   }
 }
 .menu-horizontal {
-  >.menu-item {
+  > .menu-item {
     border-bottom: $menu-item-active-border-width solid transparent;
   }
   .zntd-submenu {
@@ -88,9 +98,10 @@
   border-bottom: 0px;
   margin: 10px 20px;
   border-right: $menu-border-width solid $menu-border-color;
-  >.menu-item {
+  > .menu-item {
     border-left: $menu-item-active-border-width solid transparent;
-    &.is-active, &:hover {
+    &.is-active,
+    &:hover {
       border-bottom: 0px;
       border-left: $menu-item-active-border-width solid $menu-item-active-color;
     }
