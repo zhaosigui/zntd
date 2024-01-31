@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "./button";
+// import 'mdx' from './button.mdx'
 import type {
   ComponentMeta,
   ComponentStory,
@@ -15,6 +16,11 @@ const meta: Meta<typeof Button> = {
   title: "第四章Button",
   tags: ['autodocs'],
   component: Button,
+  parameters: {
+    docs: {
+      // page: mdx
+    }
+  }
 };
 
 export default meta;
