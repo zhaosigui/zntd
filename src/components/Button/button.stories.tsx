@@ -6,25 +6,35 @@ import type {
   ComponentStoryFn,
   Meta,
   StoryObj,
-  StoryFn
+  StoryFn,
 } from "@storybook/react";
 import { scryRenderedDOMComponentsWithTag } from "react-dom/test-utils";
 //  Use `StoryObj` instead, e.g. ComponentStoryObj<typeof Button> -> StoryObj<typeof Button>.
 // Use `Meta` instead, e.g. ComponentMeta<typeof Button> -> Meta<typeof Button>.
 const meta: Meta<typeof Button> = {
   title: "第四章Button",
+  tags: ['autodocs'],
   component: Button,
 };
 
 export default meta;
 type Story = StoryObj<typeof Button>;
-const Template: StoryFn<typeof Button> = (args) => <Button {...args} />
+const Template: StoryFn<typeof Button> = (args) => <Button {...args} />;
 export const Default = Template.bind({});
 Default.args = {
   children: "Default button",
 };
-Default.storyName = '默认样式按钮'
-
+Default.storyName = "默认样式按钮";
+// 装饰器
+Default.decorators = [
+  (Story) => {
+    return (
+      // <div style={{ margin: "50px" }}>
+        <Story />
+      // </div>
+    );
+  },
+];
 // export const Large = Template.bind({})
 // Large.args = {
 //   size: 'lg',

@@ -5,6 +5,7 @@ import '../src/styles/index.scss'
 library.add(fas)
 const preview: Preview = {
   parameters: {
+    // 点击事件
     actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
       matchers: {

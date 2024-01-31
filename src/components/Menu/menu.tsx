@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-01-23 15:14:49
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-01-24 16:44:48
+ * @LastEditTime: 2024-01-31 15:36:47
  * @FilePath: \antd\zntd\src\components\Menu\menu.tsx
  * @Description:
  */
@@ -30,7 +30,16 @@ interface IMenuContext {
 export const MenuContext = React.createContext<IMenuContext>({
   index: "0",
 });
-const Menu: React.FC<MenuProps> = (props) => {
+/**
+ * 为网站提供导航功能的菜单。支持横向纵向两种模式，支持下拉菜单。
+ * 
+ * ```javascript
+ * import { Menu } from 'zntd'
+ * 
+ * //然后可以使用 Menu.Item 和 Menu.Submenu 访问选项和子下拉菜单组件
+ * ```
+ */
+export const Menu: React.FC<MenuProps> = (props) => {
   const { children, className, defaultIndex, mode, style, onSelect, defaultOpenSubMenus } = props;
   const [currentActive, setActive] = useState(defaultIndex);
   const classes = classNames("zntd-menu", className, {
