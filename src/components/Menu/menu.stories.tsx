@@ -21,11 +21,12 @@ import type {
 //  Use `StoryObj` instead, e.g. ComponentStoryObj<typeof Button> -> StoryObj<typeof Button>.
 // Use `Meta` instead, e.g. ComponentMeta<typeof Button> -> Meta<typeof Button>.
 const meta: Meta<typeof Menu> = {
-  title: "第六章Menu",
+  title: "Menu Component",
   id: "Menu",
   //生成文档
   tags: ["autodocs"],
   component: Menu,
+  // fix stort7不支持subcomponents，子组件文档生成
   // subcomponents: {
   //   'SubMenu': SubMenu,
   //   'MenuItem': MenuItem,

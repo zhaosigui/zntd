@@ -1,3 +1,11 @@
+/*
+ * @Author: zhaosigui
+ * @Date: 2024-01-31 14:38:03
+ * @LastEditors: zhaosigui
+ * @LastEditTime: 2024-02-02 12:04:44
+ * @FilePath: \antd\zntd\src\components\Button\button.stories.tsx
+ * @Description: 
+ */
 import React from "react";
 import Button from "./button";
 // import 'mdx' from './button.mdx'
@@ -13,7 +21,7 @@ import { scryRenderedDOMComponentsWithTag } from "react-dom/test-utils";
 //  Use `StoryObj` instead, e.g. ComponentStoryObj<typeof Button> -> StoryObj<typeof Button>.
 // Use `Meta` instead, e.g. ComponentMeta<typeof Button> -> Meta<typeof Button>.
 const meta: Meta<typeof Button> = {
-  title: "第四章Button",
+  title: "Button Component",
   tags: ['autodocs'],
   component: Button,
   parameters: {
