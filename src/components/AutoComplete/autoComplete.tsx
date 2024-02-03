@@ -19,7 +19,7 @@ export interface AutoCompleteProps
   /** 点击选中建议项时触发的回调*/
   onSelect?: (item: DataSourceType) => void;
   /** 文本框发生改变的时候触发的事件*/
-  // onChange?: (value: string) => void;
+  onChange?: (value: string) => void;
   /**支持自定义渲染下拉项，返回 ReactElement */
   renderOption?: (item: DataSourceType) => ReactElement;
   data: string[];
@@ -36,25 +36,35 @@ export interface AutoCompleteProps
  */
 // 这里export是为了迎合storybook自动生成文档
 export const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
-  const { onSelect, fetchSuggestions, value, ...restsProps } = props;
+  const { onSelect, fetchSuggestions, value, renderOption, ...restsProps } =
+    props;
   const [inputValue, setInputValue] = useState(value);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<DataSourceType[]>([]);
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
     if (value) {
       const results = fetchSuggestions(value);
-      setSuggestions(results);
+      if (results instanceof Promise) {
+        results.then((data) => {
+          setSuggestions(data);
+        });
+      } else {
+        setSuggestions(results);
+      }
     } else {
       setSuggestions([]);
     }
   };
-  const handleSelect = (item: string) => {
-    setInputValue(item);
+  const handleSelect = (item: DataSourceType) => {
+    setInputValue(item.value);
     setSuggestions([]);
     if (onSelect) {
       onSelect(item);
     }
+  };
+  const renderTemplate = (item: DataSourceType) => {
+    return renderOption ? renderOption(item) : item.value;
   };
   const generateDropDown = () => {
     return (
@@ -62,7 +72,7 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
         {suggestions.map((item, index) => {
           return (
             <li key={index} onClick={() => handleSelect(item)}>
-              {item}
+              {renderTemplate(item)}
             </li>
           );
         })}
