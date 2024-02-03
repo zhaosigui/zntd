@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ReactElement, ChangeEvent } from "react";
 import classNames from "classnames";
 import Input, { InputProps } from "../Input/input";
-
+import Icon from '../Icon/icon'
 interface DataSourceObject {
   value: string;
 }
@@ -36,17 +36,23 @@ export interface AutoCompleteProps
  */
 // 这里export是为了迎合storybook自动生成文档
 export const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
-  const { onSelect, fetchSuggestions, value, renderOption, ...restsProps } =
+  const { onSelect, fetchSuggestions, value, renderOption, onChange, ...restsProps } =
     props;
   const [inputValue, setInputValue] = useState(value);
   const [suggestions, setSuggestions] = useState<DataSourceType[]>([]);
+  const [loading, setLoading] = useState(false)
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
+    if (onChange) {
+      onChange(value)
+    }
     if (value) {
       const results = fetchSuggestions(value);
       if (results instanceof Promise) {
+        setLoading(true)
         results.then((data) => {
+          setLoading(false)
           setSuggestions(data);
         });
       } else {
@@ -60,7 +66,7 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
     setInputValue(item.value);
     setSuggestions([]);
     if (onSelect) {
-      onSelect(item);
+      onSelect(item)
     }
   };
   const renderTemplate = (item: DataSourceType) => {
@@ -83,6 +89,7 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
     <>
       <div className="zntd-auto-complete">
         <Input value={inputValue} onChange={handleChange} {...restsProps} />
+        {loading && <Icon icon="spinner" spin/>}
         {suggestions.length && generateDropDown()}
       </div>
     </>
