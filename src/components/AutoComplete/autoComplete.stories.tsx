@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-02-04 10:25:53
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-04 10:38:46
+ * @LastEditTime: 2024-02-04 11:35:15
  * @FilePath: \antd\zntd\src\components\AutoComplete\autoComplete.stories.tsx
  * @Description:
  */
@@ -17,7 +17,7 @@ import {
 } from "@storybook/react";
 import { AutoComplete, DataSourceType } from "./autoComplete";
 import { action } from "@storybook/addon-actions";
-// const onChange = action('change');
+const onChange = action('change');
 interface LakerPlayerProps {
   value: string;
   number: number;
@@ -40,10 +40,13 @@ const meta: Meta<typeof AutoComplete> = {
       },
     },
   },
-  argTypes: { onClick: { action: 'clicked' }, onSelect: { action: 'selected' }, onChange: { action: 'changed' } },
+  argTypes: {
+    onClick: { action: "clicked" },
+    onSelect: { action: "selected" },
+    onChange: { action: "changed" },
+  },
 };
 export default meta;
-type Story = StoryObj<typeof AutoComplete>;
 // const Template: StoryFn<typeof AutoComplete> = (args) => <AutoComplete {...args} />
 // export const Simple = Template.bind({})
 // const lakers = ['bradley', 'pope', 'caruso', 'cook', 'cousins',
@@ -152,7 +155,7 @@ export const CAjaxComplete: StoryFn<typeof AutoComplete> = (args) => {
 };
 CAjaxComplete.storyName = "3 支持异步搜索";
 
-// storiesOf('第九章：AutoComplete', module)
+storiesOf('AutoComplete', module)
 //   .add('AutoComplete', simpleComplete, {info: {source: false, text: textComplete}})
 //   .add('自定义下拉选项', customComplete,  {info: {source: false, text: textCustom}})
 //   .add('异步请求Github用户名', ajaxComplete, {info: {source: false, text: textAjax}})

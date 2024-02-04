@@ -1,8 +1,16 @@
-import React, { useState, useEffect, ReactElement, ChangeEvent } from "react";
+import React, {
+  useState,
+  useEffect,
+  ReactElement,
+  ChangeEvent,
+  KeyboardEvent,
+  useRef,
+} from "react";
 import classNames from "classnames";
 import Input, { InputProps } from "../Input/input";
 import Icon from "../Icon/icon";
-import useDebounce from '../../hooks/useDebounce'
+import useDebounce from "../../hooks/useDebounce";
+import useClickOutside from "../../hooks/useClickOutside";
 interface DataSourceObject {
   value: string;
 }
@@ -48,9 +56,15 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
   const [inputValue, setInputValue] = useState(value as string);
   const [suggestions, setSuggestions] = useState<DataSourceType[]>([]);
   const [loading, setLoading] = useState(false);
-  const debouncedValue= useDebounce(inputValue, 500)
+  const [highlightIndex, setHighlightIndex] = useState(-1);
+  const triggerSearch = useRef(false);
+  const componentRef = useRef<HTMLDivElement>(null);
+  const debouncedValue = useDebounce(inputValue, 500);
+  useClickOutside(componentRef, () => {
+    setSuggestions([]);
+  });
   useEffect(() => {
-    if (debouncedValue) {
+    if (debouncedValue && triggerSearch.current) {
       const results = fetchSuggestions(debouncedValue);
       if (results instanceof Promise) {
         setLoading(true);
@@ -64,19 +78,58 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
     } else {
       setSuggestions([]);
     }
+    setHighlightIndex(-1);
   }, [debouncedValue]);
+  // input输入框改变
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
+    triggerSearch.current = true;
     if (onChange) {
       onChange(value);
     }
   };
+  // 点击下拉数据
   const handleSelect = (item: DataSourceType) => {
     setInputValue(item.value);
     setSuggestions([]);
     if (onSelect) {
       onSelect(item);
+    }
+    triggerSearch.current = false;
+  };
+  const highlight = (index: number) => {
+    if (index < 0) {
+      index = 0;
+    }
+    if (index >= suggestions.length) {
+      index = suggestions.length - 1;
+    }
+    setHighlightIndex(index);
+  };
+  // 键盘事件
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    switch (e.keyCode) {
+      case 13:
+        // 回车
+        if (suggestions[highlightIndex]) {
+          handleSelect(suggestions[highlightIndex]);
+        }
+        break;
+      case 38:
+        // 上
+        highlight(highlightIndex - 1);
+        break;
+      case 40:
+        //下
+        highlight(highlightIndex + 1);
+        break;
+      case 27:
+        // esc
+        setSuggestions([]);
+        break;
+      default:
+        break;
     }
   };
   const renderTemplate = (item: DataSourceType) => {
@@ -84,10 +137,22 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
   };
   const generateDropDown = () => {
     return (
-      <ul>
+      <ul className="zntd-suggestion-list">
+        {loading && (
+          <div className="suggstions-loading-icon">
+            <Icon icon="spinner" spin />
+          </div>
+        )}
         {suggestions.map((item, index) => {
+          const cnames = classNames("suggestion-item", {
+            "is-active": index === highlightIndex,
+          });
           return (
-            <li key={index} onClick={() => handleSelect(item)}>
+            <li
+              key={index}
+              className={cnames}
+              onClick={() => handleSelect(item)}
+            >
               {renderTemplate(item)}
             </li>
           );
@@ -97,10 +162,15 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
   };
   return (
     <>
-      <div className="zntd-auto-complete">
-        <Input value={inputValue} onChange={handleChange} {...restsProps} />
+      <div className="zntd-auto-complete" ref={componentRef}>
+        <Input
+          value={inputValue}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          {...restsProps}
+        />
         {loading && <Icon icon="spinner" spin />}
-        {suggestions.length && generateDropDown()}
+        {suggestions.length > 0 && generateDropDown()}
       </div>
     </>
   );
