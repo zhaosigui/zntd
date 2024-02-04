@@ -1,6 +1,13 @@
+/*
+ * @Author: zhaosigui
+ * @Date: 2024-01-19 14:28:33
+ * @LastEditors: zhaosigui
+ * @LastEditTime: 2024-02-04 13:33:45
+ * @FilePath: \antd\zntd\src\index.tsx
+ * @Description: 
+ */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
