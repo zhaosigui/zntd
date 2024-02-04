@@ -1,7 +1,8 @@
 import React, { useState, useEffect, ReactElement, ChangeEvent } from "react";
 import classNames from "classnames";
 import Input, { InputProps } from "../Input/input";
-import Icon from '../Icon/icon'
+import Icon from "../Icon/icon";
+import useDebounce from '../../hooks/useDebounce'
 interface DataSourceObject {
   value: string;
 }
@@ -36,23 +37,25 @@ export interface AutoCompleteProps
  */
 // 这里export是为了迎合storybook自动生成文档
 export const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
-  const { onSelect, fetchSuggestions, value, renderOption, onChange, ...restsProps } =
-    props;
-  const [inputValue, setInputValue] = useState(value);
+  const {
+    onSelect,
+    fetchSuggestions,
+    value,
+    renderOption,
+    onChange,
+    ...restsProps
+  } = props;
+  const [inputValue, setInputValue] = useState(value as string);
   const [suggestions, setSuggestions] = useState<DataSourceType[]>([]);
-  const [loading, setLoading] = useState(false)
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-    if (onChange) {
-      onChange(value)
-    }
-    if (value) {
-      const results = fetchSuggestions(value);
+  const [loading, setLoading] = useState(false);
+  const debouncedValue= useDebounce(inputValue, 500)
+  useEffect(() => {
+    if (debouncedValue) {
+      const results = fetchSuggestions(debouncedValue);
       if (results instanceof Promise) {
-        setLoading(true)
+        setLoading(true);
         results.then((data) => {
-          setLoading(false)
+          setLoading(false);
           setSuggestions(data);
         });
       } else {
@@ -61,12 +64,19 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
     } else {
       setSuggestions([]);
     }
+  }, [debouncedValue]);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+    if (onChange) {
+      onChange(value);
+    }
   };
   const handleSelect = (item: DataSourceType) => {
     setInputValue(item.value);
     setSuggestions([]);
     if (onSelect) {
-      onSelect(item)
+      onSelect(item);
     }
   };
   const renderTemplate = (item: DataSourceType) => {
@@ -89,7 +99,7 @@ export const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
     <>
       <div className="zntd-auto-complete">
         <Input value={inputValue} onChange={handleChange} {...restsProps} />
-        {loading && <Icon icon="spinner" spin/>}
+        {loading && <Icon icon="spinner" spin />}
         {suggestions.length && generateDropDown()}
       </div>
     </>
