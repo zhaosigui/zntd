@@ -31,7 +31,6 @@ export interface AutoCompleteProps
   onChange?: (value: string) => void;
   /**支持自定义渲染下拉项，返回 ReactElement */
   renderOption?: (item: DataSourceType) => ReactElement;
-  data: string[];
 }
 
 /**
