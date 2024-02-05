@@ -49,7 +49,15 @@ export const ASimpleUpload: StoryFn<typeof Upload> = (args) => (
     onSuccess={onSuccess}
     onChange={onChange}
     onRemove={onRemove}
-    defaultFileList={defaultFileList}
+    // defaultFileList={defaultFileList}
+    // name="fileName"
+    // data={{
+    //   'key': 'value'
+    // }}
+    // headers={{'X-Powered-By': 'zntd'}}
+    // withCredentials
+    // accept=".jpg"
+    // multiple
     // beforeUpload={checkFileSize}
     // beforeUpload={filePromise}
   >

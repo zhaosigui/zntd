@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-02-04 14:01:43
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-05 12:47:58
+ * @LastEditTime: 2024-02-05 14:02:58
  * @FilePath: \antd\zntd\src\components\UpLoad\upLoad.tsx
  * @Description:
  */
@@ -72,6 +72,12 @@ export const Upload: React.FC<UploadProps> = (props) => {
     onChange,
     onRemove,
     defaultFileList,
+    headers,
+    name,
+    data,
+    withCredentials,
+    multiple,
+    accept,
   } = props;
   const fileInput = useRef<HTMLInputElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>(defaultFileList || []);
@@ -138,14 +144,23 @@ export const Upload: React.FC<UploadProps> = (props) => {
       percent: 0,
       raw: file,
     };
-    setFileList([_file, ...fileList]);
+    setFileList((prevList) => {
+      return [_file, ...prevList];
+    });
     const formData = new FormData();
-    formData.append(file.name, file);
+    formData.append(name || "file", file);
+    if (data) {
+      Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]);
+      });
+    }
     axios
       .post(action, formData, {
         headers: {
+          ...headers,
           "Content-Type": "multipart/form-data",
         },
+        withCredentials,
         onUploadProgress: (e: any) => {
           let percentage = Math.round((e.loaded * 100) / e.total) || 0;
           if (percentage < 100) {
@@ -189,7 +204,6 @@ export const Upload: React.FC<UploadProps> = (props) => {
         }
       });
   };
-  console.log(fileList);
   return (
     <div className="zntd-upload-component">
       <Button btnType="primary" onClick={handleClick}>
@@ -201,9 +215,14 @@ export const Upload: React.FC<UploadProps> = (props) => {
         style={{ display: "none" }}
         onChange={handleFileChange}
         type="file"
+        accept={accept}
+        multiple={multiple}
       ></input>
       <UploadList fileList={fileList} onRemove={handleRemove} />
     </div>
   );
+};
+Upload.defaultProps = {
+  name: "file",
 };
 export default Upload;
