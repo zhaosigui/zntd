@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-02-04 14:01:43
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-05 14:02:58
+ * @LastEditTime: 2024-02-05 14:31:53
  * @FilePath: \antd\zntd\src\components\UpLoad\upLoad.tsx
  * @Description:
  */
@@ -10,6 +10,7 @@ import axios from "axios";
 import React, { ChangeEvent, useRef, useState } from "react";
 import Button from "../Button";
 import UploadList from "./uploadList";
+import Dragger from "./dragger";
 type UpLoadFileStatus = "ready" | "uploading" | "success" | "error";
 export interface UploadProps {
   /**必选参数, 上传的地址 */
@@ -78,6 +79,8 @@ export const Upload: React.FC<UploadProps> = (props) => {
     withCredentials,
     multiple,
     accept,
+    children,
+    drag,
   } = props;
   const fileInput = useRef<HTMLInputElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>(defaultFileList || []);
@@ -206,18 +209,28 @@ export const Upload: React.FC<UploadProps> = (props) => {
   };
   return (
     <div className="zntd-upload-component">
-      <Button btnType="primary" onClick={handleClick}>
-        Upload file
-      </Button>
-      <input
-        ref={fileInput}
-        className="zntd-file-input"
-        style={{ display: "none" }}
-        onChange={handleFileChange}
-        type="file"
-        accept={accept}
-        multiple={multiple}
-      ></input>
+      <div
+        className="zntd-upload-input"
+        style={{ display: "inline-block" }}
+        onClick={handleClick}
+      >
+         {drag ? 
+            <Dragger onFile={(files) => {uploadFiles(files)}}>
+              {children}
+            </Dragger>:
+            children
+          }
+        <input
+          ref={fileInput}
+          className="zntd-file-input"
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+          type="file"
+          accept={accept}
+          multiple={multiple}
+        ></input>
+      </div>
+
       <UploadList fileList={fileList} onRemove={handleRemove} />
     </div>
   );
