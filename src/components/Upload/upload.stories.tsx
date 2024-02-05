@@ -10,7 +10,7 @@ const onSuccess = action("onSuccess");
 const onChange = action("onChange");
 const onRemove = action("onRemove");
 const meta: Meta<typeof Upload> = {
-  title: "Upload component",
+  title: "Upload Component",
   id: "Upload",
   tags: ["autodocs"],
   component: Upload,
