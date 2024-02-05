@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentMeta, Meta, StoryFn } from "@storybook/react";
-import { Upload } from "./upload";
+import { Upload, UploadFile } from "./upload";
 import Button from "../Button/button";
 import Icon from "../Icon/icon";
 import { action } from "@storybook/addon-actions";
@@ -8,6 +8,7 @@ const onError = action("onError");
 const onProgress = action("onProgress");
 const onSuccess = action("onSuccess");
 const onChange = action("onChange");
+const onRemove = action("onRemove");
 const meta: Meta<typeof Upload> = {
   title: "Upload component",
   id: "Upload",
@@ -22,6 +23,11 @@ const meta: Meta<typeof Upload> = {
   },
 };
 export default meta;
+const defaultFileList: UploadFile[] = [
+  { uid: "1", size: 12, name: "hello.md", status: "uploading", percent: 30 },
+  { uid: "2", size: 123, name: "xyz.md", status: "success", percent: 100 },
+  { uid: "3", size: 1234, name: "zntd.md", status: "error", percent: 0 },
+];
 const checkFileSize = (file: File) => {
   if (Math.round(file.size / 1024) > 50) {
     alert("file to big");
@@ -42,8 +48,10 @@ export const ASimpleUpload: StoryFn<typeof Upload> = (args) => (
     onProgress={onProgress}
     onSuccess={onSuccess}
     onChange={onChange}
+    onRemove={onRemove}
+    defaultFileList={defaultFileList}
     // beforeUpload={checkFileSize}
-    beforeUpload={filePromise}
+    // beforeUpload={filePromise}
   >
     {/* <Button size="lg" btnType="primary">
       <Icon icon="upload" /> 点击上传{" "}
