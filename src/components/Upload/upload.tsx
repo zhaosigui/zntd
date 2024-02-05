@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-02-04 14:01:43
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-05 12:16:05
+ * @LastEditTime: 2024-02-05 12:47:58
  * @FilePath: \antd\zntd\src\components\UpLoad\upLoad.tsx
  * @Description:
  */
@@ -108,8 +108,8 @@ export const Upload: React.FC<UploadProps> = (props) => {
     setFileList((preveList) => {
       return preveList.filter((item) => item.uid !== file.uid);
     });
-    if(onRemove) {
-      onRemove(file)
+    if (onRemove) {
+      onRemove(file);
     }
   };
   const uploadFiles = (files: FileList) => {
