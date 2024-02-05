@@ -7,8 +7,19 @@
  * @Description:
  */
 import React from "react";
-export interface FormProps {}
+export interface FormProps {
+  name?: string;
+  children?: React.ReactNode;
+}
 export const Form: React.FC<FormProps> = (props) => {
-  return null;
+  const { name, children } = props;
+  return (
+    <form name={name} className="zntd-form">
+      {children}
+    </form>
+  );
 };
+Form.defaultProps = {
+  name: 'zntd_form'
+}
 export default Form;
