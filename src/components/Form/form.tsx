@@ -20,16 +20,18 @@ export interface FormProps {
 export type IFormContext = Pick<
   ReturnType<typeof useStore>,
   "dispatch" | "fields"
->;
+> &
+  Pick<FormProps, "initiaValues">;
 export const FormContext = createContext<IFormContext>({} as IFormContext);
 export const Form: React.FC<FormProps> = (props) => {
-  const { name, children } = props;
+  const { name, children, initiaValues } = props;
   // 初始化store
   const { form, fields, dispatch } = useStore();
   // 通过FormContext 将dispatch 传递给子组件
   const passedContext: IFormContext = {
     dispatch,
     fields,
+    initiaValues
   };
   return (
     <>

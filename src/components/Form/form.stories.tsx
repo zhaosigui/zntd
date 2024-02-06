@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-01-31 15:36:27
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 10:51:26
+ * @LastEditTime: 2024-02-06 12:24:11
  * @FilePath: \antd\zntd\src\components\Form\form.stories.tsx
  * @Description:
  */
@@ -42,7 +42,7 @@ export default meta;
 type Story = StoryObj<typeof Form>;
 export const BasicForm: StoryFn<typeof Form> = (args) => {
   return (
-    <Form>
+    <Form initiaValues={{username: 'username', agreement: true}}>
       <Item label="用户名" name="username">
         <Input />
       </Item>

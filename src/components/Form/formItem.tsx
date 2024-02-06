@@ -2,13 +2,15 @@
  * @Author: zhaosigui
  * @Date: 2024-02-05 14:43:03
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 11:59:13
+ * @LastEditTime: 2024-02-06 13:17:43
  * @FilePath: \antd\zntd\src\components\Form\formItem.tsx
  * @Description:
  */
 import React, { useContext, useEffect, ReactNode } from "react";
 import classNames from "classnames";
 import { FormContext } from "./form";
+export type SomeRequire<T, K extends keyof T> = Required<Pick<T, K>> &
+  Omit<T, K>;
 export interface FormItemProps {
   // 类似于 'usename': {name: '',value: '', rules:[], isValid:true}中的 key--usename
   /**字段名 */
@@ -29,31 +31,37 @@ export interface FormItemProps {
 }
 export const FormItem: React.FC<FormItemProps> = (props) => {
   const { label, children, name, valuePropName, trigger, getValueFromEvent } =
-    props;
-  console.log("children", children);
+    props as SomeRequire<
+      FormItemProps,
+      "getValueFromEvent" | "trigger" | "valuePropName"
+    >;
 
   // 获取父组件传递的dispatch 各种属性
-  const { dispatch, fields } = useContext(FormContext);
+  const { dispatch, fields, initiaValues } = useContext(FormContext);
   const rowClass = classNames("zntd-row", {
     "zntd-row-no-label": !label,
   });
   // 挂载的时候进行fields注册
   useEffect(() => {
-    dispatch({ type: "addField", name, value: { label, name } });
+    const value = (initiaValues && initiaValues[name]) || "";
+    dispatch({ type: "addField", name, value: { label, name, value } });
   }, []);
   // 获取对应的fieldState
   const fieldState = fields[name];
   const value = fieldState && fieldState.value;
   const onValueUpdate = (e: any) => {
-    const value = getValueFromEvent && getValueFromEvent(e);
+    // const value = getValueFromEvent && getValueFromEvent(e);
+    const value = getValueFromEvent(e);
+    console.log(getValueFromEvent, value);
     dispatch({ type: "updateValue", name, value });
-    console.log(value);
   };
   // 1、手动的创建一个属性列表，需要有value以及onchange属性，
   const controlProps: Record<string, any> = {};
-  controlProps[valuePropName!] = value;
+  controlProps[valuePropName] = value;
+  // controlProps[valuePropName!] = value;
   // trigger! 中！表示非空
-  controlProps[trigger!] = onValueUpdate;
+  // controlProps[trigger!] = onValueUpdate;
+  controlProps[trigger] = onValueUpdate;
   // 2、获取children的第一个原生
   const childList = React.Children.toArray(children);
   // 没有子组件
@@ -62,13 +70,15 @@ export const FormItem: React.FC<FormItemProps> = (props) => {
       "No child element found in Form.Item, please provide one form component"
     );
   }
-   // 子组件大于一个
-   if (childList.length > 1) {
-    console.warn('Only support one child element in Form.Item, others will be omitted')
+  // 子组件大于一个
+  if (childList.length > 1) {
+    console.warn(
+      "Only support one child element in Form.Item, others will be omitted"
+    );
   }
   // 不是 ReactElement 的子组件
   if (!React.isValidElement(childList[0])) {
-    console.error('Child component is not a valid React Element')
+    console.error("Child component is not a valid React Element");
   }
   const child = childList[0] as React.ReactElement;
 
@@ -77,7 +87,6 @@ export const FormItem: React.FC<FormItemProps> = (props) => {
     ...child.props,
     ...controlProps,
   });
-  console.log("returnChildNode", returnChildNode);
 
   return (
     <div className={rowClass}>
