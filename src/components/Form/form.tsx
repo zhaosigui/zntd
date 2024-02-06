@@ -2,13 +2,14 @@
  * @Author: zhaosigui
  * @Date: 2024-02-05 14:43:03
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 19:31:05
+ * @LastEditTime: 2024-02-06 19:44:02
  * @FilePath: \antd\zntd\src\components\Form\form.tsx
  * @Description:
  */
 import React, { createContext, forwardRef, ReactNode } from "react";
 import useStore, { FormState } from "./useStore";
 import { ValidateError } from "async-validator";
+// https://zh-hans.legacy.reactjs.org/docs/render-props.html
 export type RenderProps = (form: FormState) => ReactNode;
 export interface FormProps {
   /**表单名称，会作为表单字段 id 前缀使用 */

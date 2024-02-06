@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-01-31 15:36:27
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 19:37:11
+ * @LastEditTime: 2024-02-06 19:50:39
  * @FilePath: \antd\zntd\src\components\Form\form.stories.tsx
  * @Description:
  */
@@ -62,44 +62,49 @@ const confirmRules: CustomRule[] = [
 export const BasicForm: StoryFn<typeof Form> = (args) => {
   return (
     <Form initialValues={{ username: "username", agreement: false }} {...args}>
-      <Item
-        label="用户名"
-        name="username"
-        rules={[{ type: "email", required: true }]}
-      >
-        <Input />
-      </Item>
-      <Item
-        label="密码"
-        name="password"
-        rules={[{ type: "string", required: true, min: 3, max: 8 }]}
-      >
-        <Input type="password" />
-      </Item>
-      <Item label="重复密码" name="confirmPwd" rules={confirmRules}>
-        <Input type="password" />
-      </Item>
-      <div
-        className="agreement-section"
-        style={{ display: "flex", justifyContent: "center" }}
-      >
-        <Item
-          name="agreement"
-          valuePropName="checked"
-          getValueFromEvent={(e) => e.target.checked}
-          rules={[{ type: "enum", enum: [true], message: "请同意协议" }]}
-        >
-          <input type="checkbox" />
-        </Item>
-        <span className="agree-text">
-          注册即代表你同意<a href="#">用户协议</a>
-        </span>
-      </div>
-      <div className="zntd-form-submit-area">
-        <Button type="submit" btnType="primary">
-          登录
-        </Button>
-      </div>
+      {({ isSubmitting, isValid }) => (
+        <>
+          <Item
+            label="用户名"
+            name="username"
+            rules={[{ type: "email", required: true }]}
+          >
+            <Input />
+          </Item>
+          <Item
+            label="密码"
+            name="password"
+            rules={[{ type: "string", required: true, min: 3, max: 8 }]}
+          >
+            <Input type="password" />
+          </Item>
+          <Item label="重复密码" name="confirmPwd" rules={confirmRules}>
+            <Input type="password" />
+          </Item>
+          <div
+            className="agreement-section"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <Item
+              name="agreement"
+              valuePropName="checked"
+              getValueFromEvent={(e) => e.target.checked}
+              rules={[{ type: "enum", enum: [true], message: "请同意协议" }]}
+            >
+              <input type="checkbox" />
+            </Item>
+            <span className="agree-text">
+              注册即代表你同意<a href="#">用户协议</a>
+            </span>
+          </div>
+          <div className="zntd-form-submit-area">
+            <Button type="submit" btnType="primary">
+              登陆 {isSubmitting ? "验证中" : "验证完毕"}{" "}
+              {isValid ? "通过😄" : "没通过😢"}{" "}
+            </Button>
+          </div>
+        </>
+      )}
     </Form>
   );
 };
