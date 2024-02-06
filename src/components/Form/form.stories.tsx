@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-01-31 15:36:27
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 12:24:11
+ * @LastEditTime: 2024-02-06 13:53:53
  * @FilePath: \antd\zntd\src\components\Form\form.stories.tsx
  * @Description:
  */
@@ -42,11 +42,15 @@ export default meta;
 type Story = StoryObj<typeof Form>;
 export const BasicForm: StoryFn<typeof Form> = (args) => {
   return (
-    <Form initiaValues={{username: 'username', agreement: true}}>
-      <Item label="用户名" name="username">
+    <Form initiaValues={{ username: "username", agreement: true }}>
+      <Item
+        label="用户名"
+        name="username"
+        rules={[{ type: "email", required: true }]}
+      >
         <Input />
       </Item>
-      <Item label="密码" name="password">
+      <Item label="密码" name="password"   rules={[{ type: "string", required: true, min: 3, max: 8 }]}>
         <Input type="password" />
       </Item>
       <div

@@ -2,13 +2,14 @@
  * @Author: zhaosigui
  * @Date: 2024-02-05 14:43:03
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 13:17:43
+ * @LastEditTime: 2024-02-06 13:49:47
  * @FilePath: \antd\zntd\src\components\Form\formItem.tsx
  * @Description:
  */
 import React, { useContext, useEffect, ReactNode } from "react";
 import classNames from "classnames";
 import { FormContext } from "./form";
+import { RuleItem } from "async-validator";
 export type SomeRequire<T, K extends keyof T> = Required<Pick<T, K>> &
   Omit<T, K>;
 export interface FormItemProps {
@@ -26,25 +27,39 @@ export interface FormItemProps {
   getValueFromEvent?: (event: any) => any;
   /**校验规则，设置字段的校验逻辑。请看 async validator 了解更多规则 */
   // rules?: CustomRule[];
+  rules?: RuleItem[];
   /**设置字段校验的时机 */
-  // validateTrigger?: string;
+  validateTrigger?: string;
 }
 export const FormItem: React.FC<FormItemProps> = (props) => {
-  const { label, children, name, valuePropName, trigger, getValueFromEvent } =
-    props as SomeRequire<
-      FormItemProps,
-      "getValueFromEvent" | "trigger" | "valuePropName"
-    >;
+  const {
+    label,
+    children,
+    name,
+    valuePropName,
+    trigger,
+    getValueFromEvent,
+    rules,
+    validateTrigger,
+  } = props as SomeRequire<
+    FormItemProps,
+    "getValueFromEvent" | "trigger" | "valuePropName" | "validateTrigger"
+  >;
 
   // 获取父组件传递的dispatch 各种属性
-  const { dispatch, fields, initiaValues } = useContext(FormContext);
+  const { dispatch, fields, initiaValues, validateField } =
+    useContext(FormContext);
   const rowClass = classNames("zntd-row", {
     "zntd-row-no-label": !label,
   });
   // 挂载的时候进行fields注册
-  useEffect(() => {
+  useEffect(() => { 
     const value = (initiaValues && initiaValues[name]) || "";
-    dispatch({ type: "addField", name, value: { label, name, value } });
+    dispatch({
+      type: "addField",
+      name,
+      value: { label, name, value, rules, isValid: true },
+    });
   }, []);
   // 获取对应的fieldState
   const fieldState = fields[name];
@@ -52,8 +67,10 @@ export const FormItem: React.FC<FormItemProps> = (props) => {
   const onValueUpdate = (e: any) => {
     // const value = getValueFromEvent && getValueFromEvent(e);
     const value = getValueFromEvent(e);
-    console.log(getValueFromEvent, value);
     dispatch({ type: "updateValue", name, value });
+  };
+  const onValueValidate = async () => {
+    await validateField(name);
   };
   // 1、手动的创建一个属性列表，需要有value以及onchange属性，
   const controlProps: Record<string, any> = {};
@@ -62,6 +79,9 @@ export const FormItem: React.FC<FormItemProps> = (props) => {
   // trigger! 中！表示非空
   // controlProps[trigger!] = onValueUpdate;
   controlProps[trigger] = onValueUpdate;
+  if (rules) {
+    controlProps[validateTrigger] = onValueValidate;
+  }
   // 2、获取children的第一个原生
   const childList = React.Children.toArray(children);
   // 没有子组件
@@ -102,6 +122,7 @@ export const FormItem: React.FC<FormItemProps> = (props) => {
 FormItem.defaultProps = {
   valuePropName: "value",
   trigger: "onChange",
+  validateTrigger: "onBlur",
   getValueFromEvent: (e) => e.target.value,
 };
 export default FormItem;
