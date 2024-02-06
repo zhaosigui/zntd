@@ -2,14 +2,14 @@
  * @Author: zhaosigui
  * @Date: 2024-02-05 14:43:03
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 16:36:40
+ * @LastEditTime: 2024-02-06 17:03:24
  * @FilePath: \antd\zntd\src\components\Form\formItem.tsx
  * @Description:
  */
 import React, { useContext, useEffect, ReactNode } from "react";
 import classNames from "classnames";
 import { FormContext } from "./form";
-import { RuleItem } from "async-validator";
+import { CustomRule } from "./useStore";
 export type SomeRequire<T, K extends keyof T> = Required<Pick<T, K>> &
   Omit<T, K>;
 export interface FormItemProps {
@@ -26,8 +26,7 @@ export interface FormItemProps {
   /**设置如何将 event 的值转换成字段值 */
   getValueFromEvent?: (event: any) => any;
   /**校验规则，设置字段的校验逻辑。请看 async validator 了解更多规则 */
-  // rules?: CustomRule[];
-  rules?: RuleItem[];
+  rules?: CustomRule[];
   /**设置字段校验的时机 */
   validateTrigger?: string;
 }
@@ -66,7 +65,11 @@ export const FormItem: React.FC<FormItemProps> = (props) => {
   const value = fieldState && fieldState.value;
   // 错误信息
   const errors = fieldState && fieldState.errors;
-  const isRequired = rules?.some((rule) => rule.required);
+  const isRequired = rules?.some((rule) => {
+    if (typeof rule !== "function") {
+      return rule.required;
+    }
+  });
   const hasError = errors && errors.length > 0;
   const labelClass = classNames({
     "zntd-form-item-required": isRequired,

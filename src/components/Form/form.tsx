@@ -2,15 +2,15 @@
  * @Author: zhaosigui
  * @Date: 2024-02-05 14:43:03
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 13:44:29
+ * @LastEditTime: 2024-02-06 18:18:29
  * @FilePath: \antd\zntd\src\components\Form\form.tsx
  * @Description:
  */
-import React, { createContext } from "react";
+import React, { createContext, forwardRef } from "react";
 import useStore from "./useStore";
 export interface FormProps {
   name?: string;
-  initiaValues?: Record<string, any>;
+  initialValues?: Record<string, any>;
   children?: React.ReactNode;
 }
 // export interface IFormContext {
@@ -21,17 +21,21 @@ export type IFormContext = Pick<
   ReturnType<typeof useStore>,
   "dispatch" | "fields" | "validateField"
 > &
-  Pick<FormProps, "initiaValues">;
+  Pick<FormProps, "initialValues">;
+export type IFormRef = Omit<
+  ReturnType<typeof useStore>,
+  "fields" | "dispatch" | "form"
+>;
 export const FormContext = createContext<IFormContext>({} as IFormContext);
-export const Form: React.FC<FormProps> = (props) => {
-  const { name, children, initiaValues } = props;
+export const Form = forwardRef<IFormRef, FormProps>((props, ref) => {
+  const { name, children, initialValues } = props;
   // 初始化store
   const { form, fields, dispatch, validateField } = useStore();
   // 通过FormContext 将dispatch 传递给子组件
   const passedContext: IFormContext = {
     dispatch,
     fields,
-    initiaValues,
+    initialValues,
     validateField,
   };
   return (
@@ -47,7 +51,7 @@ export const Form: React.FC<FormProps> = (props) => {
       </div>
     </>
   );
-};
+});
 Form.defaultProps = {
   name: "zntd_form",
 };

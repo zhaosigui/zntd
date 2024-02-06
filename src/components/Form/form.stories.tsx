@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-01-31 15:36:27
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 13:53:53
+ * @LastEditTime: 2024-02-06 17:16:58
  * @FilePath: \antd\zntd\src\components\Form\form.stories.tsx
  * @Description:
  */
@@ -19,6 +19,7 @@ import type {
   StoryObj,
   StoryFn,
 } from "@storybook/react";
+import { CustomRule } from "./useStore";
 //  Use `StoryObj` instead, e.g. ComponentStoryObj<typeof Button> -> StoryObj<typeof Button>.
 // Use `Meta` instead, e.g. ComponentMeta<typeof Button> -> Meta<typeof Button>.
 const meta: Meta<typeof Form> = {
@@ -40,9 +41,27 @@ const meta: Meta<typeof Form> = {
 
 export default meta;
 type Story = StoryObj<typeof Form>;
+const confirmRules: CustomRule[] = [
+  { type: "string", required: true, min: 3, max: 8 },
+  ({ getFieldValue }) => ({
+    asyncValidator(rule, value) {
+      console.log("the value", getFieldValue("password"));
+      console.log("the rule", getFieldValue("password"));
+      console.log(value);
+      return new Promise((resolve, reject) => {
+        if (value !== getFieldValue("password")) {
+          reject("The two passwords that you entered do not match!");
+        }
+        setTimeout(() => {
+          resolve();
+        }, 1000);
+      });
+    },
+  }),
+];
 export const BasicForm: StoryFn<typeof Form> = (args) => {
   return (
-    <Form initiaValues={{ username: "username", agreement: true }}>
+    <Form initialValues={{ username: "username", agreement: true }}>
       <Item
         label="用户名"
         name="username"
@@ -50,7 +69,14 @@ export const BasicForm: StoryFn<typeof Form> = (args) => {
       >
         <Input />
       </Item>
-      <Item label="密码" name="password"   rules={[{ type: "string", required: true, min: 3, max: 8 }]}>
+      <Item
+        label="密码"
+        name="password"
+        rules={[{ type: "string", required: true, min: 3, max: 8 }]}
+      >
+        <Input type="password" />
+      </Item>
+      <Item label="重复密码" name="confirmPwd" rules={confirmRules}>
         <Input type="password" />
       </Item>
       <div
