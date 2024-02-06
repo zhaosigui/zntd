@@ -10,13 +10,17 @@ import React, { createContext } from "react";
 import useStore from "./useStore";
 export interface FormProps {
   name?: string;
+  initiaValues?: Record<string, any>;
   children?: React.ReactNode;
 }
 // export interface IFormContext {
 //   dispatch: React.Dispatch<any>;
 // }
 // ReturnType--拿到一个函数的返回类型, Pick选择一个只要的返回类型
-export type IFormContext = Pick<ReturnType<typeof useStore>, "dispatch" | 'fields'>;
+export type IFormContext = Pick<
+  ReturnType<typeof useStore>,
+  "dispatch" | "fields"
+>;
 export const FormContext = createContext<IFormContext>({} as IFormContext);
 export const Form: React.FC<FormProps> = (props) => {
   const { name, children } = props;
@@ -25,7 +29,7 @@ export const Form: React.FC<FormProps> = (props) => {
   // 通过FormContext 将dispatch 传递给子组件
   const passedContext: IFormContext = {
     dispatch,
-    fields
+    fields,
   };
   return (
     <>

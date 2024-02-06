@@ -53,7 +53,11 @@ export const BasicForm: StoryFn<typeof Form> = (args) => {
         className="agreement-section"
         style={{ display: "flex", justifyContent: "center" }}
       >
-        <Item name="agreement">
+        <Item
+          name="agreement"
+          valuePropName="checked"
+          getValueFromEvent={(e) => e.target.checked}
+        >
           <input type="checkbox" />
         </Item>
         <span className="agree-text">
