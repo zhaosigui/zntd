@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-02-05 14:43:03
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 21:04:51
+ * @LastEditTime: 2024-02-06 21:17:55
  * @FilePath: \antd\zntd\src\components\Form\form.tsx
  * @Description:
  */
@@ -82,7 +82,7 @@ export const Form = forwardRef<IFormRef, FormProps>((props, ref) => {
   }
   return (
     <>
-      <form name={name} className="zntd-form" onSubmit={submitForm} ref={ref}>
+      <form name={name} className="zntd-form" onSubmit={submitForm}>
         <FormContext.Provider value={passedContext}>
           {childrenNode}
         </FormContext.Provider>
