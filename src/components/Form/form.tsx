@@ -2,16 +2,27 @@
  * @Author: zhaosigui
  * @Date: 2024-02-05 14:43:03
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 18:18:29
+ * @LastEditTime: 2024-02-06 19:31:05
  * @FilePath: \antd\zntd\src\components\Form\form.tsx
  * @Description:
  */
-import React, { createContext, forwardRef } from "react";
-import useStore from "./useStore";
+import React, { createContext, forwardRef, ReactNode } from "react";
+import useStore, { FormState } from "./useStore";
+import { ValidateError } from "async-validator";
+export type RenderProps = (form: FormState) => ReactNode;
 export interface FormProps {
+  /**表单名称，会作为表单字段 id 前缀使用 */
   name?: string;
+  /**表单默认值，只有初始化以及重置时生效 */
   initialValues?: Record<string, any>;
-  children?: React.ReactNode;
+  children?: ReactNode | RenderProps;
+  /**提交表单且数据验证成功后回调事件 */
+  onFinish?: (values: Record<string, any>) => void;
+  /**提交表单且数据验证失败后回调事件 */
+  onFinishFailed?: (
+    values: Record<string, any>,
+    errors: Record<string, ValidateError[]>
+  ) => void;
 }
 // export interface IFormContext {
 //   dispatch: React.Dispatch<any>;
@@ -28,9 +39,10 @@ export type IFormRef = Omit<
 >;
 export const FormContext = createContext<IFormContext>({} as IFormContext);
 export const Form = forwardRef<IFormRef, FormProps>((props, ref) => {
-  const { name, children, initialValues } = props;
+  const { name, children, initialValues, onFinish, onFinishFailed } = props;
   // 初始化store
-  const { form, fields, dispatch, validateField } = useStore();
+  const { form, fields, dispatch, validateField, validateAllField } =
+    useStore();
   // 通过FormContext 将dispatch 传递给子组件
   const passedContext: IFormContext = {
     dispatch,
@@ -38,11 +50,28 @@ export const Form = forwardRef<IFormRef, FormProps>((props, ref) => {
     initialValues,
     validateField,
   };
+  // 提交全部验证
+  const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const { isValid, errors, values } = await validateAllField();
+    if (isValid && onFinish) {
+      onFinish(values);
+    } else if (!isValid && onFinishFailed) {
+      onFinishFailed(values, errors);
+    }
+  };
+  let childrenNode: ReactNode;
+  if (typeof children === "function") {
+    childrenNode = children(form);
+  } else {
+    childrenNode = children;
+  }
   return (
     <>
-      <form name={name} className="zntd-form">
+      <form name={name} className="zntd-form" onSubmit={submitForm}>
         <FormContext.Provider value={passedContext}>
-          {children}
+          {childrenNode}
         </FormContext.Provider>
       </form>
       <div>

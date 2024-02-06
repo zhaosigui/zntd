@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-02-05 14:43:03
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 17:03:24
+ * @LastEditTime: 2024-02-06 19:03:18
  * @FilePath: \antd\zntd\src\components\Form\formItem.tsx
  * @Description:
  */
@@ -46,18 +46,18 @@ export const FormItem: React.FC<FormItemProps> = (props) => {
   >;
 
   // 获取父组件传递的dispatch 各种属性
-  const { dispatch, fields, initiaValues, validateField } =
+  const { dispatch, fields, initialValues, validateField } =
     useContext(FormContext);
   const rowClass = classNames("zntd-row", {
     "zntd-row-no-label": !label,
   });
   // 挂载的时候进行fields注册
   useEffect(() => {
-    const value = (initiaValues && initiaValues[name]) || "";
+    const value = (initialValues && initialValues[name]) || "";
     dispatch({
       type: "addField",
       name,
-      value: { label, name, value, rules, isValid: true },
+      value: { label, name, value, rules: rules || [], errors: [], isValid: true },
     });
   }, []);
   // 获取对应的fieldState

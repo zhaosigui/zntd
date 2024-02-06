@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-01-31 15:36:27
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 17:16:58
+ * @LastEditTime: 2024-02-06 19:37:11
  * @FilePath: \antd\zntd\src\components\Form\form.stories.tsx
  * @Description:
  */
@@ -61,7 +61,7 @@ const confirmRules: CustomRule[] = [
 ];
 export const BasicForm: StoryFn<typeof Form> = (args) => {
   return (
-    <Form initialValues={{ username: "username", agreement: true }}>
+    <Form initialValues={{ username: "username", agreement: false }} {...args}>
       <Item
         label="用户名"
         name="username"
@@ -87,6 +87,7 @@ export const BasicForm: StoryFn<typeof Form> = (args) => {
           name="agreement"
           valuePropName="checked"
           getValueFromEvent={(e) => e.target.checked}
+          rules={[{ type: "enum", enum: [true], message: "请同意协议" }]}
         >
           <input type="checkbox" />
         </Item>
