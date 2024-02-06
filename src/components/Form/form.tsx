@@ -2,11 +2,16 @@
  * @Author: zhaosigui
  * @Date: 2024-02-05 14:43:03
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 19:44:02
+ * @LastEditTime: 2024-02-06 21:04:51
  * @FilePath: \antd\zntd\src\components\Form\form.tsx
  * @Description:
  */
-import React, { createContext, forwardRef, ReactNode } from "react";
+import React, {
+  createContext,
+  forwardRef,
+  ReactNode,
+  useImperativeHandle,
+} from "react";
 import useStore, { FormState } from "./useStore";
 import { ValidateError } from "async-validator";
 // https://zh-hans.legacy.reactjs.org/docs/render-props.html
@@ -40,10 +45,17 @@ export type IFormRef = Omit<
 >;
 export const FormContext = createContext<IFormContext>({} as IFormContext);
 export const Form = forwardRef<IFormRef, FormProps>((props, ref) => {
+  // export const Form = forwardRef<HTMLFormElement, FormProps>((props, ref) => {
   const { name, children, initialValues, onFinish, onFinishFailed } = props;
   // 初始化store
-  const { form, fields, dispatch, validateField, validateAllField } =
-    useStore();
+  const { form, fields, dispatch, ...restProps } = useStore(initialValues);
+  const { validateField, validateAllFields } = restProps;
+  // 自定义ref 暴露内容
+  useImperativeHandle(ref, () => {
+    return {
+      ...restProps,
+    };
+  });
   // 通过FormContext 将dispatch 传递给子组件
   const passedContext: IFormContext = {
     dispatch,
@@ -55,7 +67,7 @@ export const Form = forwardRef<IFormRef, FormProps>((props, ref) => {
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    const { isValid, errors, values } = await validateAllField();
+    const { isValid, errors, values } = await validateAllFields();
     if (isValid && onFinish) {
       onFinish(values);
     } else if (!isValid && onFinishFailed) {
@@ -70,7 +82,7 @@ export const Form = forwardRef<IFormRef, FormProps>((props, ref) => {
   }
   return (
     <>
-      <form name={name} className="zntd-form" onSubmit={submitForm}>
+      <form name={name} className="zntd-form" onSubmit={submitForm} ref={ref}>
         <FormContext.Provider value={passedContext}>
           {childrenNode}
         </FormContext.Provider>

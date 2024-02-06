@@ -2,12 +2,12 @@
  * @Author: zhaosigui
  * @Date: 2024-01-31 15:36:27
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 19:50:39
+ * @LastEditTime: 2024-02-06 21:07:44
  * @FilePath: \antd\zntd\src\components\Form\form.stories.tsx
  * @Description:
  */
-import React from "react";
-import Form from "./form";
+import React, { useRef } from "react";
+import Form, { IFormRef } from "./form";
 import Item from "./formItem";
 import Input from "../Input";
 import Button from "../Button";
@@ -60,8 +60,19 @@ const confirmRules: CustomRule[] = [
   }),
 ];
 export const BasicForm: StoryFn<typeof Form> = (args) => {
+  // const ref = useRef<HTMLFormElement>(null);
+  const ref = useRef<IFormRef>(null);
+  const resetAll = () => {
+    console.log("form-ref", ref.current);
+    console.log("get-value", ref.current?.getFieldValue("username"));
+    ref.current?.resetFields();
+  };
   return (
-    <Form initialValues={{ username: "username", agreement: false }} {...args}>
+    <Form
+      initialValues={{ username: "username", agreement: false }}
+      {...args}
+      ref={ref}
+    >
       {({ isSubmitting, isValid }) => (
         <>
           <Item
@@ -101,6 +112,9 @@ export const BasicForm: StoryFn<typeof Form> = (args) => {
             <Button type="submit" btnType="primary">
               登陆 {isSubmitting ? "验证中" : "验证完毕"}{" "}
               {isValid ? "通过😄" : "没通过😢"}{" "}
+            </Button>
+            <Button type="button" btnType="primary" onClick={resetAll}>
+              重置
             </Button>
           </div>
         </>

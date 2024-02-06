@@ -134,7 +134,7 @@ function useStore(initialValues?: Record<string, any>) {
       });
     }
   };
-  const validateAllField = async () => {
+  const validateAllFields = async () => {
     // 'usename': {name: '',value: 'abc', rules: RuleItem[], isValid:true, errors:[]} 转换成
 
     let isValid = true;
@@ -183,7 +183,8 @@ function useStore(initialValues?: Record<string, any>) {
     dispatch,
     form,
     validateField,
-    validateAllField,
+    getFieldValue,
+    validateAllFields,
     getFieldsValue,
     setFieldValue,
     resetFields,
