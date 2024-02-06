@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-01-31 15:36:27
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-05 16:18:30
+ * @LastEditTime: 2024-02-06 10:51:26
  * @FilePath: \antd\zntd\src\components\Form\form.stories.tsx
  * @Description:
  */
@@ -43,20 +43,17 @@ type Story = StoryObj<typeof Form>;
 export const BasicForm: StoryFn<typeof Form> = (args) => {
   return (
     <Form>
-      <Item label="用户名">
+      <Item label="用户名" name="username">
         <Input />
       </Item>
-      <Item label="密码">
+      <Item label="密码" name="password">
         <Input type="password" />
-      </Item>
-      <Item>
-        <Input placeholder="no-label" />
       </Item>
       <div
         className="agreement-section"
         style={{ display: "flex", justifyContent: "center" }}
       >
-        <Item>
+        <Item name="agreement">
           <input type="checkbox" />
         </Item>
         <span className="agree-text">
