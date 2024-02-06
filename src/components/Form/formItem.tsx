@@ -2,7 +2,7 @@
  * @Author: zhaosigui
  * @Date: 2024-02-05 14:43:03
  * @LastEditors: zhaosigui
- * @LastEditTime: 2024-02-06 13:49:47
+ * @LastEditTime: 2024-02-06 16:36:40
  * @FilePath: \antd\zntd\src\components\Form\formItem.tsx
  * @Description:
  */
@@ -53,7 +53,7 @@ export const FormItem: React.FC<FormItemProps> = (props) => {
     "zntd-row-no-label": !label,
   });
   // 挂载的时候进行fields注册
-  useEffect(() => { 
+  useEffect(() => {
     const value = (initiaValues && initiaValues[name]) || "";
     dispatch({
       type: "addField",
@@ -64,6 +64,16 @@ export const FormItem: React.FC<FormItemProps> = (props) => {
   // 获取对应的fieldState
   const fieldState = fields[name];
   const value = fieldState && fieldState.value;
+  // 错误信息
+  const errors = fieldState && fieldState.errors;
+  const isRequired = rules?.some((rule) => rule.required);
+  const hasError = errors && errors.length > 0;
+  const labelClass = classNames({
+    "zntd-form-item-required": isRequired,
+  });
+  const itemClass = classNames("zntd-form-item-control", {
+    "zntd-form-item-has-error": hasError,
+  });
   const onValueUpdate = (e: any) => {
     // const value = getValueFromEvent && getValueFromEvent(e);
     const value = getValueFromEvent(e);
@@ -112,10 +122,20 @@ export const FormItem: React.FC<FormItemProps> = (props) => {
     <div className={rowClass}>
       {label && (
         <div className="zntd-form-item-label">
-          <label title={label}>{label}</label>
+          <label title={label} className={labelClass}>
+            {label}
+          </label>
         </div>
       )}
-      <div className="zntd-form-item">{returnChildNode}</div>
+      <div className="zntd-form-item">
+        <div className={itemClass}>{returnChildNode}</div>
+        {/* 错误信息 */}
+        {hasError && (
+          <div className="zntd-form-item-explain">
+            <span>{errors[0].message}</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
