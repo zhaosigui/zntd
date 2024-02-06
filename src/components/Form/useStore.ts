@@ -15,7 +15,7 @@ export interface FormState {
 }
 
 export interface FieldsAction {
-  type: "addField" | "12";
+  type: "addField" | "updateValue";
   name: string;
   value: any;
 }
@@ -26,6 +26,12 @@ function fieldsReducer(state: FieldsState, action: FieldsAction): FieldsState {
       return {
         ...state,
         [`${action.name}`]: { ...action.value },
+        // 类似于这种数据结构 'usename': {name: '',value: '', rules:[], isValid:true}
+      };
+    case "updateValue":
+      return {
+        ...state,
+        [`${action.name}`]: { ...state[action.name], value: action.value },
         // 类似于这种数据结构 'usename': {name: '',value: '', rules:[], isValid:true}
       };
     default:
