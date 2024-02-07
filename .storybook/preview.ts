@@ -13,6 +13,13 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    viewMode: 'docs',
+    options: {
+      storySort: {
+        // 文档顺序
+        order: ['Welcome'], 
+      },
+    },
   },
 };
 
