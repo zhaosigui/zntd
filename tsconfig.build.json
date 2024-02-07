@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "build",
+    "outDir": "dist",
     // https://www.typescriptlang.org/docs/handbook/2/modules.html
     "module": "esnext",
     // https://www.typescriptlang.org/tsconfig#target
