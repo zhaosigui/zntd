@@ -2,9 +2,9 @@
   "name": "zntd",
   "version": "0.1.0",
   "private": true,
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "unpkg": "dist/index.js",
+  "main": "dist/index.es.js",
+  "module": "dist/index.es.js",
+  "unpkg": "dist/index.umd.js",
   "types": "dist/index.d.ts",
   "keywords": [
     "Component",
@@ -42,7 +42,8 @@
   "scripts": {
     "start": "react-scripts start",
     "clean": "rimraf ./dist",
-    "build": "npm run clean  && npm run build-ts && npm run build-css",
+    "lint": "eslint --ext js,ts,tsx src --max-warnings 5",
+    "build": "npm run clean  && npm run build-es && npm run build-umd",
     "test": "react-scripts test",
     "test:nowatch": "cross-env CI=true react-scripts test",
     "eject": "react-scripts eject",
@@ -51,7 +52,8 @@
     "prepublishOnly": "npm run test:nowatch && npm run lint && npm run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "lint": "eslint --ext js,ts,tsx src --max-warnings 5"
+    "build-es": "rollup --config rollup/rollup.esm.config.js",
+    "build-umd": "rollup --config rollup/rollup.umd.config.js"
   },
   "husky": {
     "hooks": {
@@ -78,6 +80,10 @@
     ]
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-replace": "^5.0.5",
     "@storybook/addon-essentials": "^7.6.10",
     "@storybook/addon-interactions": "^7.6.10",
     "@storybook/addon-links": "^7.6.10",
@@ -102,6 +108,11 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "rimraf": "^5.0.5",
+    "rollup": "^2.79.1",
+    "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.23",
+    "rollup-plugin-sass": "^1.12.21",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.36.0",
     "sass": "^1.51.0",
     "sass-loader": "^12.6.0",
     "storybook": "^7.6.10",

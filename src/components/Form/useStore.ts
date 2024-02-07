@@ -1,5 +1,7 @@
 import React, { useState, useReducer } from "react";
 import Schema, { RuleItem, ValidateError } from "async-validator";
+// import {mapValues, each} from 'lodash-es' 
+// 换成一下这种是为了更好让rollup tree-shaking，否则在umd模式下会将所有lodash代码打包
 import mapValues from "lodash-es/mapValues";
 import each from "lodash-es/each";
 export type CustomRuleFunc = ({ getFieldValue }) => RuleItem;
