@@ -53,6 +53,11 @@
     "build-storybook": "storybook build",
     "lint": "eslint --ext js,ts,tsx src --max-warnings 5"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run test:nowatch && npm run lint"
+    }
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -90,6 +95,7 @@
     "@types/react-transition-group": "^4.4.10",
     "cross-env": "^7.0.3",
     "eslint-plugin-storybook": "^0.6.15",
+    "husky": "^9.0.10",
     "node-sass": "^6.0.1",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
