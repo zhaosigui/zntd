@@ -2,9 +2,10 @@
   "name": "zntd",
   "version": "0.1.0",
   "private": true,
-  "main": "dist/index.es.js",
-  "module": "dist/index.es.js",
-  "unpkg": "dist/index.umd.js",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "unpkg": "build/index.js",
+  "types": "build/index.d.ts",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
@@ -32,10 +33,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "clean": "rimraf ./build",
+    "build": "npm run clean  && npm run build-ts && npm run build-css",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build-ts": "tsc -p tsconfig.build.json",
+    "build-css": "node-sass ./src/styles/index.scss ./build/index.css",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -69,7 +72,11 @@
     "@storybook/react-webpack5": "^7.6.10",
     "@storybook/test": "^7.6.10",
     "eslint-plugin-storybook": "^0.6.15",
+    "node-sass": "^6.0.1",
     "prop-types": "^15.8.1",
+    "rimraf": "^5.0.5",
+    "sass": "^1.51.0",
+    "sass-loader": "^12.6.0",
     "storybook": "^7.6.10",
     "webpack": "^5.90.0"
   }
